@@ -569,3 +569,94 @@ a webpage gets opened "hello world"-- this is output.
 i.e server.port=9090)
 and again run mvn spring-boot: run
 and open http://localhost:9090/
+
+
+
+index.html: <!DOCTYPE html>
+<html>
+<body>
+  <h2>Event Registration</h2>
+
+  <form id="regForm">
+    Name: <input id="name"><br><br>
+    Email: <input id="email"><br><br>
+    Phone: <input id="phone"><br><br>
+    Event: <input id="event"><br><br>
+    <button type="submit">Register</button>
+  </form>
+
+  <script>
+    document.getElementById("regForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        event: document.getElementById("event").value
+      };
+
+      const res = await fetch("http://localhost:3000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      alert(await res.text());
+    });
+  </script>
+</body>
+</html>
+
+
+
+const express = require("express");
+const mysql = require("mysql2");
+const cors = require("cors");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// DB connection
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '1234',        // change if needed
+    database: 'event_db'
+});
+
+db.connect((err) => {
+    if (err) console.log("DB Error:", err);
+    else console.log("MySQL Connected");
+});
+
+// Register API
+app.post("/register", (req, res) => {
+    const { name, email, phone, event } = req.body;
+
+    const sql = "INSERT INTO registrations (name, email, phone, event) VALUES (?, ?, ?, ?)";
+    db.query(sql, [name, email, phone, event], (err, result) => {
+        if (err) {
+            console.log("Insert Error:", err);
+            return res.status(500).send("Database Error");
+        }
+        res.send("Registration Successful!");
+    });
+});
+
+app.listen(3000, () => {
+    console.log("Server running on http://localhost:3000");
+});
+
+
+create database event_db;use event_db;
+Database changed
+mysql> create table registrations(
+    -> name varchar(30),
+    -> email varchar(30),
+    -> phone varchar(30),
+    -> event varchar(30));
+
+
+mysql> select * from registrations;
