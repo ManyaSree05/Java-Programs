@@ -195,3 +195,377 @@ now open terminal: type
 http:localhost:8080
 
 a webpage gets opened "hello world"-- this is output.
+
+
+open your file in vs ,new terminal
+git init
+git add .
+git commit -m "Initial commit"
+
+git remote add origin https://github.com/lahari776/DevOps.git
+
+git branch -M main
+
+git push -u origin main
+
+
+
+
+or
+
+
+git init
+git add .
+git commit -m "Initial commit"
+
+git remote add origin https://github.com/lahari776/DevOps.git
+
+git push -u origin master
+
+
+
+exp -4
+
+go to git search myshuttle ,fork->open forked repo,create new file
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Build') {
+            steps {
+                echo 'Building ...'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Testing ...'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying ...'
+            }
+        }
+
+    }
+}
+
+commit new file
+
+click on code,copy url of repo
+
+login to jenkins->click on new item->keep suitable name->choose pipeline
+
+go to general -> choose GitHub project->paste url
+go to pipleine->definition(pipeline script for scm),scm (git),repo url(paste url)
+Confirm that the Script Path value is Jenkinsfile. This value refers the Jenkinsfile
+you created earlier, click Save.
+
+ save it will be directly redirected to the
+Dashboard of the project there we can use, the “Build Now” option to run the pipeline and
+check if it is successful or not, by using stage view or console output.
+
+
+exp-6
+⭐ Steps to Install Docker on Windows 11 (Brief)
+
+Open browser → search Docker → go to docker.com.
+
+Open Developers → Documentation → go to the Windows download section.
+
+Download Docker Desktop for Windows (stable version).
+
+Click Close and Restart when installation completes.
+
+After restart, open CMD and run docker --version to verify installation.
+
+Launch Docker Desktop, accept the license, keep default settings, and finish setup.
+
+Sign in with email/GitHub or skip — Docker is ready to use.
+
+· docker pull image_name : To pull image
+· docker run image_name : To create container.
+· docker ps: To check running contianers
+· docker ps -a: To check all containers
+· docker rm container_id: To remove container.
+· docker images: To show list of images.
+· docker rmi image_name: To remove image.
+
+
+docker pull hello-world
+docker pull ubuntu
+docker pull nginx
+
+exp-7
+
+create a file
+open with vs
+create app.py,Dockerfile,requirements.text
+
+app.py
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return "Hello, Docker World!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
+
+requirements.txt
+
+Flask==2.3.2
+
+Dockerfile
+# Use official Python image as base
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements file and install dependencies
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the app code
+COPY app.py .
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Command to run the app
+CMD ["python", "app.py"]
+
+
+
+
+open terminal in vs code
+docker build -t flask-docker-app .
+docker run -p 5000:5000 flask-docker-app
+✔ Now open your browser:
+http://localhost:5000
+
+
+You’ll see:
+
+Hello, Docker World!
+
+
+exp -8
+Open Docker Desktop
+
+Go to Settings
+
+Click Kubernetes
+
+Tick Enable Kubernetes
+
+Click Apply & Restart
+
+✅ Check Kubernetes Components
+kubectl -get nodes
+to check version
+kubectl version
+
+
+exp -9 
+
+create a file
+open with vs
+create app.py,Dockerfile,requirements.text
+
+app.py
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return "Hello, Docker World!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80)
+
+
+requirements.txt
+
+Flask==2.3.2
+
+Dockerfile
+# Use official Python image as base
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements file and install dependencies
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the app code
+COPY app.py .
+
+# Expose the port the app runs on
+EXPOSE 80
+
+# Command to run the app
+CMD ["python", "app.py"]
+
+
+deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-python-app-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-python-app
+  template:
+    metadata:
+      labels:
+        app: my-python-app
+    spec:
+      containers:
+        - name: my-python-app
+          image: my-python-app:latest # Replace with your actual Docker image (e.g., yourname/my-python-app:1.0)
+          ports:
+            - containerPort: 80
+
+
+service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-python-app-service
+spec:
+  selector:
+    app: my-python-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+
+STEP 3 — Login to Docker Hub
+docker login
+
+STEP 4 — Build the Docker Image
+docker build -t my-python-app .
+
+
+Check image using:
+
+docker images
+
+STEP 5 — Tag the Image for Docker Hub
+docker tag my-python-app:latest yourusername/my-python-app:latest
+
+STEP 6 — Push the Image to Docker Hub
+docker push yourusername/my-python-app:latest
+
+STEP 7 — Apply Kubernetes Files
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+
+STEP 8 — Check Kubernetes Resources
+kubectl get deployments
+kubectl get pods
+kubectl get svc
+
+
+Your service will show a NodePort like:
+
+30008:5000
+
+STEP 9 — Access App (Port Forward Method)
+
+Use this if NodePort doesn't open:
+
+kubectl port-forward svc/my-python-app-service 8080:80
+
+
+Then open:
+
+http://localhost:8080
+
+
+
+exp 11:
+karate testing
+steps:
+check for mvn and java version
+java -version
+mvn -version
+
+run this command in terminal:
+
+mvn archetype:generate ^
+-DarchetypeGroupId=com.intuit.karate ^
+-DarchetypeArtifactId=karate-archetype ^
+-DarchetypeVersion=1.5.0 ^
+-DgroupId=com.example ^
+-DartifactId=karate-demo ^
+-DinteractiveMode=false
+
+
+a folder names karate-demo will be created.
+open that folder in vs code.
+open terminal, type 
+mvn test -Dtest=examples.users.UsersRunner
+
+you get build success at last. 
+in between you laso see a url, double click on that. 
+you get a wepage, this is output.
+
+
+expt-12:
+Springboot
+check mvn and java version.
+
+go to spring initialzr website and selct project maven, language java, version 3.4.11 snapshot(3.3.3 if available)
+dependencies:Spring Web
+click generate, open this folder in vs code
+in pom.xml make these changes
+1. version to 3.3.3
+2. remove repositories section
+
+Inside src/main/java/com/example/demo, create a new file named HelloController.java and add the following code:
+package com.example.demo;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class HelloController {
+
+    @GetMapping("/")
+    public String hello() {
+        return "Hello, Spring Boot!";
+    }
+}
+
+in vs code terminal, set path as spring-boot\demo.
+
+run this:
+mvn spring-boot:run
+
+you should see springboot running. 
+now open terminal: type
+http:localhost:8080/
+
+a webpage gets opened "hello world"-- this is output.
+(if facing any issues C:\Users\alamp\Downloads\demo (1)\demo\src\main\resources\application.properties and change port
+i.e server.port=9090)
+and again run mvn spring-boot: run
+and open http://localhost:9090/
