@@ -1,662 +1,259 @@
-7th exp 1.Open the Windows Terminal and run the following commands:  
-             mkdir flask-docker-app
-             cd flask-docker-app
-2. Open this folder in VS Code, create a file called app.py, paste the code, and save it.
-3. Create a file called requirements.txt, paste the following text, and save it:  
-             Flask==2.3.2
-4.  Create a file called Dockerfile, paste the code, and save it.
-5.  Now, open the terminal and run the following commands:
-            docker build -t flask-docker-app .
-            docker run -p 5000:5000 flask-docker-app
-6.  Now, go to the browser and visit http://localhost:5000. You will see the output:  
-            Hello, Docker World!  
-app.py
+1.
+File Name: hello.js
+console.log("Hello World");
+node hello.js
+2.
+3.npm init -y
+4.npm install express
+server.js
+const express = require("express");
+const app = express();
+app.use(express.json());
 
-from flask import Flask
-import os
+let users = [];
 
-app = Flask(name)
+// Register route
+app.post("/register", (req, res) => {
+    let { username, password } = req.body;
+    if (!username || !password) return res.send("All fields required");
+    if (users.find(u => u.username === username)) return res.send("User exists");
+    users.push({ username, password });
+    res.send("Registered");
+});
 
-@app.route('/')
-def hello():
-    name = os.getenv("NAME", "World")  # Fetch environment variable "NAME"
-    return f"Hello, {name}!"  # Display greeting message
+// Login route
+app.post("/login", (req, res) => {
+    let { username, password } = req.body;
+    const user = users.find(u => u.username === username && u.password === password);
+    if (user)
+        res.send(`Login successful. Welcome, ${user.username}!`);
+    else
+        res.send("Invalid credentials");
+});
 
-if name == "main":
-    app.run(host='0.0.0.0', port=5000)  # Updated to port 5000
+app.listen(3000, () => console.log("Server running on http://localhost:3000"));
 
-
-requirements.txt
-type Flask==2.3.2
-
-
-Dockerfile  
-
-# Use official lightweight Python image
-FROM python:3.9-slim
-
-# Set the working directory in the container
-WORKDIR /app
-
-# Copy all files from current directory to /app in the container
-COPY . /app
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Expose port 5000 for the app
-EXPOSE 5000
-
-# Set an environment variable
-ENV NAME World
-
-# Run the app
-CMD ["python", "app.py"]
+run server.js
+t Using Thunder Client:
+ * Register User
+1. Method: POST
+ http://localhost:3000/register
+2. Body → JSON:
+ogin User
+ 1. Method: POST
+ http://localhost:3000/login
+ 2. Body → JSON:
 
 
-deployment.yaml  
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-python-app-deployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: my-python-app
-  template:
-    metadata:
-      labels:
-        app: my-python-app
-    spec:
-      containers:
-        - name: my-python-app
-          image: my-python-app:latest  # Replace with your actual image name
-          ports:
-            - containerPort: 5000
-
-service.yaml
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-python-app-service
-spec:
-  selector:
-    app: my-python-app
-  ports:
-    - name: http
-      port: 5000
-      targetPort: 5000
-  type: LoadBalancer
-
-
-expt 9:
-automate the process of running containerised applications using kubernetes
-
-steps:
-open terminal type 
-mkdir flask-docker-app
-cd flask-docker-app
-docker login
-run docker build -t my-python-app
-docker tag my-python-app:latest <username>/my-python-app:latest
-docker push <username>/my-python-app:latest
-open vs code and create  files 
-
-open terminal
-
-kubectl apply -f deployment.yaml
-kubectl -f service.yaml
-kubectl get deployments
-kubectl get pods
-kubectl get svc
-kubectl port-forward svc/my-python-app-service 9090:5000
-
-open vs code
-type this:
-docker run -p 5000:5000 my-python-app
-
-output: double click the url you get, you see a webpage opened , with "hello world"
-
-expt 10:
-maven and java
-
-steps:
-got to maven official website, download binary zip archive folder and extract it.
-go to "edit system environment variables" , environment variables, click on new.
-variable name:MAVEN_HOME
-variable value: copy path to extracted folder
-
-now copy bin folder path of this extracted folder.
-click on path, add new and then paste this url there, click ok.
-
-open terminal type 
-mvn -version
-java -version
-
-if you see versions, it is successful.
-
-expt 11:
-karate testing
-steps:
-check for mvn and java version
-run this command in terminal:
-
-mvn archetype:generate ^
--DarchetypeGroupId=com.intuit.karate ^
--DarchetypeArtifactId=karate-archetype ^
--DarchetypeVersion=1.5.0 ^
--DgroupId=com.example ^
--DartifactId=karate-demo ^
--DinteractiveMode=false
-
-
-a folder names karate-demo will be created.
-open that folder in vs code.
-open terminal, type 
-mvn test -Dtest=examples.users.UsersRunner
-
-you get build success at last. 
-in between you laso see a url, double click on that. 
-you get a wepage, this is output.
-
-expt-12:
-Springboot
-check mvn and java version.
-
-go to spring initialzr website and selct project maven, language java, version 3.4.11 snapshot(3.3.3 if available)
-dependencies:Spring Web
-click generate, open this folder in vs code
-in pom.xml make these changes
-1. version to 3.3.3
-2. remove repositories section
-
-Inside src/main/java/com/example/demo, create a new file named HelloController.java and add the following code:
-package com.example.demo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-@RestController
-public class HelloController {
-@GetMapping("/")
-public String hello() {
-return "Hello, Spring Boot!";
+3.
+const fs = require("fs");
+// 1. Write file
+fs.writeFile("data.txt", "Hello Node.js File System!", (err) => {
+if (err) {
+ console.log("Error writing file");
+ return;
 }
+console.log("File written successfully");
+// 2. Read file
+fs.readFile("data.txt", "utf8", (err, data) => {
+if (err) {
+ console.log("Error reading file");
+ return;
 }
-
-in vs code terminal, set path as spring-boot\demo.
-
-run this:
-mvn spring-boot:run
-
-you should see springboot running. 
-now open terminal: type
-http:localhost:8080
-
-a webpage gets opened "hello world"-- this is output.
-
-
-open your file in vs ,new terminal
-git init
-git add .
-git commit -m "Initial commit"
-
-git remote add origin https://github.com/lahari776/DevOps.git
-
-git branch -M main
-
-git push -u origin main
-
-
-
-
-or
-
-
-git init
-git add .
-git commit -m "Initial commit"
-
-git remote add origin https://github.com/lahari776/DevOps.git
-
-git push -u origin master
-
-
-
-exp -4
-
-go to git search myshuttle ,fork->open forked repo,create new file
-pipeline {
-    agent any
-
-    stages {
-
-        stage('Build') {
-            steps {
-                echo 'Building ...'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Testing ...'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying ...'
-            }
-        }
-
-    }
-}
-
-commit new file
-
-click on code,copy url of repo
-
-login to jenkins->click on new item->keep suitable name->choose pipeline
-
-go to general -> choose GitHub project->paste url
-go to pipleine->definition(pipeline script for scm),scm (git),repo url(paste url)
-Confirm that the Script Path value is Jenkinsfile. This value refers the Jenkinsfile
-you created earlier, click Save.
-
- save it will be directly redirected to the
-Dashboard of the project there we can use, the “Build Now” option to run the pipeline and
-check if it is successful or not, by using stage view or console output.
-
-
-exp-6
-⭐ Steps to Install Docker on Windows 11 (Brief)
-
-Open browser → search Docker → go to docker.com.
-
-Open Developers → Documentation → go to the Windows download section.
-
-Download Docker Desktop for Windows (stable version).
-
-Click Close and Restart when installation completes.
-
-After restart, open CMD and run docker --version to verify installation.
-
-Launch Docker Desktop, accept the license, keep default settings, and finish setup.
-
-Sign in with email/GitHub or skip — Docker is ready to use.
-
-· docker pull image_name : To pull image
-· docker run image_name : To create container.
-· docker ps: To check running contianers
-· docker ps -a: To check all containers
-· docker rm container_id: To remove container.
-· docker images: To show list of images.
-· docker rmi image_name: To remove image.
-
-
-docker pull hello-world
-docker pull ubuntu
-docker pull nginx
-
-exp-7
-
-create a file
-open with vs
-create app.py,Dockerfile,requirements.text
-
-app.py
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    return "Hello, Docker World!"
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
-
-
-requirements.txt
-
-Flask==2.3.2
-
-Dockerfile
-# Use official Python image as base
-FROM python:3.11-slim
-
-# Set working directory
-WORKDIR /app
-
-# Copy requirements file and install dependencies
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the app code
-COPY app.py .
-
-# Expose the port the app runs on
-EXPOSE 5000
-
-# Command to run the app
-CMD ["python", "app.py"]
-
-
-
-
-open terminal in vs code
-docker build -t flask-docker-app .
-docker run -p 5000:5000 flask-docker-app
-✔ Now open your browser:
-http://localhost:5000
-
-
-You’ll see:
-
-Hello, Docker World!
-
-
-exp -8
-Open Docker Desktop
-
-Go to Settings
-
-Click Kubernetes
-
-Tick Enable Kubernetes
-
-Click Apply & Restart
-
-✅ Check Kubernetes Components
-kubectl -get nodes
-to check version
-kubectl version
-
-
-exp -9 
-
-create a file
-open with vs
-create app.py,Dockerfile,requirements.text
-
-app.py
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello():
-    return "Hello, Docker World!"
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
-
-
-requirements.txt
-
-Flask==2.3.2
-
-Dockerfile
-# Use official Python image as base
-FROM python:3.11-slim
-
-# Set working directory
-WORKDIR /app
-
-# Copy requirements file and install dependencies
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the app code
-COPY app.py .
-
-# Expose the port the app runs on
-EXPOSE 80
-
-# Command to run the app
-CMD ["python", "app.py"]
-
-
-deployment.yaml
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-python-app-deployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: my-python-app
-  template:
-    metadata:
-      labels:
-        app: my-python-app
-    spec:
-      containers:
-        - name: my-python-app
-          image: my-python-app:latest # Replace with your actual Docker image (e.g., yourname/my-python-app:1.0)
-          ports:
-            - containerPort: 80
-
-
-service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-python-app-service
-spec:
-  selector:
-    app: my-python-app
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
-
-STEP 3 — Login to Docker Hub
-docker login
-
-STEP 4 — Build the Docker Image
-docker build -t my-python-app .
-
-
-Check image using:
-
-docker images
-
-STEP 5 — Tag the Image for Docker Hub
-docker tag my-python-app:latest yourusername/my-python-app:latest
-
-STEP 6 — Push the Image to Docker Hub
-docker push yourusername/my-python-app:latest
-
-STEP 7 — Apply Kubernetes Files
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
-
-STEP 8 — Check Kubernetes Resources
-kubectl get deployments
-kubectl get pods
-kubectl get svc
-
-
-Your service will show a NodePort like:
-
-30008:5000
-
-STEP 9 — Access App (Port Forward Method)
-
-Use this if NodePort doesn't open:
-
-kubectl port-forward svc/my-python-app-service 8080:80
-
-
-Then open:
-
-http://localhost:8080
-
-
-
-exp 11:
-karate testing
-steps:
-check for mvn and java version
-java -version
-mvn -version
-
-run this command in terminal:
-
-mvn archetype:generate ^
--DarchetypeGroupId=com.intuit.karate ^
--DarchetypeArtifactId=karate-archetype ^
--DarchetypeVersion=1.5.0 ^
--DgroupId=com.example ^
--DartifactId=karate-demo ^
--DinteractiveMode=false
-
-
-a folder names karate-demo will be created.
-open that folder in vs code.
-open terminal, type 
-mvn test -Dtest=examples.users.UsersRunner
-
-you get build success at last. 
-in between you laso see a url, double click on that. 
-you get a wepage, this is output.
-
-
-expt-12:
-Springboot
-check mvn and java version.
-
-go to spring initialzr website and selct project maven, language java, version 3.4.11 snapshot(3.3.3 if available)
-dependencies:Spring Web
-click generate, open this folder in vs code
-in pom.xml make these changes
-1. version to 3.3.3
-2. remove repositories section
-
-Inside src/main/java/com/example/demo, create a new file named HelloController.java and add the following code:
-package com.example.demo;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-public class HelloController {
-
-    @GetMapping("/")
-    public String hello() {
-        return "Hello, Spring Boot!";
-    }
-}
-
-in vs code terminal, set path as spring-boot\demo.
-
-run this:
-mvn spring-boot:run
-
-you should see springboot running. 
-now open terminal: type
-http:localhost:8080/
-
-a webpage gets opened "hello world"-- this is output.
-(if facing any issues C:\Users\alamp\Downloads\demo (1)\demo\src\main\resources\application.properties and change port
-i.e server.port=9090)
-and again run mvn spring-boot: run
-and open http://localhost:9090/
-
-
-
-index.html: <!DOCTYPE html>
+console.log("\nFile content after write:");
+console.log(data);
+// 3. Append file
+fs.appendFile("data.txt", "\nThis is appended text.", (err) => {
+ if (err) {
+ console.log("Error appending file");
+ return;
+ }
+ console.log("\nData appended successfully");
+ // 4. Read again after append
+ fs.readFile("data.txt", "utf8", (err, newData) => {
+ if (err) {
+ console.log("Error reading file");
+ return;
+ }
+ console.log("\nFile content after append:");
+ console.log(newData);
+ // 5. Rename file
+fs.rename("data.txt", "newdata.txt", (err) => {
+ if (err) {
+ console.log("Error renaming file");
+ return;
+ }
+ console.log("\nFile renamed successfully");
+ console.log("New file name: newdata.txt");
+ // 6. Delete file
+ fs.unlink("newdata.txt", (err) => {
+ if (err) {
+ console.log("Error deleting file");
+ return;
+ }
+ console.log("\nFile deleted successfully");
+ });
+ });
+ });
+});
+});
+});
+4
+app.js
+const http = require("http");
+const fs = require("fs");
+
+http.createServer((req,res)=>{
+  if(req.url==="/"){
+    fs.readFile("index.html",(e,d)=>{
+      res.writeHead(200,{"Content-Type":"text/html"});
+      res.end(d);
+    });
+  }
+}).listen(3000);
+index.html
+<!DOCTYPE html>
 <html>
 <body>
-  <h2>Event Registration</h2>
 
-  <form id="regForm">
-    Name: <input id="name"><br><br>
-    Email: <input id="email"><br><br>
-    Phone: <input id="phone"><br><br>
-    Event: <input id="event"><br><br>
-    <button type="submit">Register</button>
-  </form>
+<h3>Food Delivery</h3>
 
-  <script>
-    document.getElementById("regForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+<input type="radio" name="r" onclick="showMenu('pizza')"> Pizza Hut
+<input type="radio" name="r" onclick="showMenu('kfc')"> KFC
+<input type="radio" name="r" onclick="showMenu('dominos')"> Dominos
+<br><br>
 
-      const data = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        phone: document.getElementById("phone").value,
-        event: document.getElementById("event").value
-      };
+<div id="menu"></div>
 
-      const res = await fetch("http://localhost:3000/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
+<input type="text" id="food" placeholder="Enter food item"><br><br>
 
-      alert(await res.text());
-    });
-  </script>
+<button onclick="order()">Place Order</button>
+
+<script>
+function showMenu(type) {
+  var menu = document.getElementById("menu");
+
+  if (type === "pizza") {
+    menu.innerHTML =
+      "Pizza Hut Menu:<br>" +
+      "Margherita - ₹199<br>" +
+      "Veg Supreme - ₹299<br>" +
+      "Cheese Burst - ₹349<br><br>";
+  }
+  else if (type === "kfc") {
+    menu.innerHTML =
+      "KFC Menu:<br>" +
+      "Fried Chicken - ₹249<br>" +
+      "Burger - ₹199<br>" +
+      "French Fries - ₹149<br><br>";
+  }
+  else if (type === "dominos") {
+    menu.innerHTML =
+      "Dominos Menu:<br>" +
+      "Veg Pizza - ₹199<br>" +
+      "Paneer Pizza - ₹299<br>" +
+      "Garlic Bread - ₹149<br><br>";
+  }
+}
+
+function order() {
+  var food = document.getElementById("food").value;
+  if (food != "")
+    alert("Order placed for " + food);
+}
+</script>
+
 </body>
 </html>
 
-
-
-const express = require("express");
-const mysql = require("mysql2");
-const cors = require("cors");
-
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// DB connection
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',        // change if needed
-    database: 'event_db'
-});
-
-db.connect((err) => {
-    if (err) console.log("DB Error:", err);
-    else console.log("MySQL Connected");
-});
-
-// Register API
-app.post("/register", (req, res) => {
-    const { name, email, phone, event } = req.body;
-
-    const sql = "INSERT INTO registrations (name, email, phone, event) VALUES (?, ?, ?, ?)";
-    db.query(sql, [name, email, phone, event], (err, result) => {
-        if (err) {
-            console.log("Insert Error:", err);
-            return res.status(500).send("Database Error");
-        }
-        res.send("Registration Successful!");
-    });
-});
-
-app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000");
-});
-
-
-create database event_db;use event_db;
-Database changed
-mysql> create table registrations(
-    -> name varchar(30),
-    -> email varchar(30),
-    -> phone varchar(30),
-    -> event varchar(30));
-
-
-mysql> select * from registrations;
+5.
+1. Database Commands
+ View all databases
+show dbs
+ Create a new or switch databases
+use 235c5
+ View current database
+db
+ Delete current database
+db.dropDatabase()
+ons
+ show collections
+ Create a collection named 'students'
+db.createCollection('comments') 
+db.students.drop()
+6.
+1. Sample Dataset (Students Collection)
+{
+"student_id": 101,
+"name": "Anita Sharma",
+"department": "Computer Science",
+"year": 3,
+"cgpa": 8.4
+}
+Database: collegeDB
+Collection: students
+2. Create Operation (Insert Data)
+a) Insert One Document
+use collegeDB
+db.students.insertOne({
+student_id: 101,
+name: "Anita Sharma",
+department: "Computer Science",
+year: 3,
+cgpa: 8.4
+})
+b) Insert Multiple Documents
+db.students.insertMany([
+{
+student_id: 102,
+name: "Rahul Verma",
+department: "Information Technology",
+year: 2,
+cgpa: 7.9
+},
+{
+student_id: 103,
+name: "Neha Singh"
+department: "Computer Science",
+year: 4,
+cgpa: 9.1
+}
+]
+Documents are added to the students collection.
+3. Read Operation (Retrieve Data)
+a) Retrieve All Documents
+db.students.find()
+b) Retrieve with Condition
+db.students.find({ department: "Computer Science" })
+c) Retrieve Specific Fields (Projection)
+db.students.find(
+{ year: 3 },
+{ name: 1, cgpa: 1, _id: 0 }
+)
+d) Find One Document
+db.students.findOne({ student_id: 102 })
+4. Update Operation (Modify Data)
+a) Update One Document
+db.students.updateOne(
+{ student_id: 101 },
+{ $set: { cgpa: 8.8 } }
+)
+b) Update Multiple Documents
+db.students.updateMany(
+{ department: "Computer Science" },
+{ $set: { department: "CSE" } }
+)
+c) Increment a Field
+db.students.updateOne(
+{ student_id: 102 },
+{ $inc: { cgpa: 0.2 } }
+)
+db.students.find()
+5. Delete Operation (Remove Data)
+a) Delete One Document
+db.students.deleteOne({ student_id: 103 })
+b) Delete Multiple Documents
+db.students.deleteMany({ year: 2}
+c) Delete All Documents (Careful!)
+ db.students.deleteMany({})
+ db.students.find()
