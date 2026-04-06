@@ -1,259 +1,158 @@
-1.
-File Name: hello.js
-console.log("Hello World");
-node hello.js
-2.
-3.npm init -y
-4.npm install express
-server.js
-const express = require("express");
-const app = express();
-app.use(express.json());
 
-let users = [];
+5. a. Write a Python program to find out the correlation between Salary (dependent variable)
+and Experience (independent variable) using Simple Linear Regression.
+import pandas as pd
+from sklearn.linear_model import LinearRegression
 
-// Register route
-app.post("/register", (req, res) => {
-    let { username, password } = req.body;
-    if (!username || !password) return res.send("All fields required");
-    if (users.find(u => u.username === username)) return res.send("User exists");
-    users.push({ username, password });
-    res.send("Registered");
-});
+# sample data
+data = {'Experience': [1,2,3,4,5], 'Salary': [30000,4010000,50000,60000,70000]}
+df = pd.DataFrame(data)
 
-// Login route
-app.post("/login", (req, res) => {
-    let { username, password } = req.body;
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user)
-        res.send(`Login successful. Welcome, ${user.username}!`);
-    else
-        res.send("Invalid credentials");
-});
+X = df[['Experience']]
+y = df['Salary']
 
-app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+model = LinearRegression()
+model.fit(X, y)
 
-run server.js
-t Using Thunder Client:
- * Register User
-1. Method: POST
- http://localhost:3000/register
-2. Body → JSON:
-ogin User
- 1. Method: POST
- http://localhost:3000/login
- 2. Body → JSON:
+# Predict for 6 years experience
+predicted_salary = model.predict([[6]])
 
+print("Coefficient:", model.coef_)
+print("Intercept:", model.intercept_)
+print("Predicted Salary for 6 years experience:", predicted_salary[0])
 
-3.
-const fs = require("fs");
-// 1. Write file
-fs.writeFile("data.txt", "Hello Node.js File System!", (err) => {
-if (err) {
- console.log("Error writing file");
- return;
-}
-console.log("File written successfully");
-// 2. Read file
-fs.readFile("data.txt", "utf8", (err, data) => {
-if (err) {
- console.log("Error reading file");
- return;
-}
-console.log("\nFile content after write:");
-console.log(data);
-// 3. Append file
-fs.appendFile("data.txt", "\nThis is appended text.", (err) => {
- if (err) {
- console.log("Error appending file");
- return;
- }
- console.log("\nData appended successfully");
- // 4. Read again after append
- fs.readFile("data.txt", "utf8", (err, newData) => {
- if (err) {
- console.log("Error reading file");
- return;
- }
- console.log("\nFile content after append:");
- console.log(newData);
- // 5. Rename file
-fs.rename("data.txt", "newdata.txt", (err) => {
- if (err) {
- console.log("Error renaming file");
- return;
- }
- console.log("\nFile renamed successfully");
- console.log("New file name: newdata.txt");
- // 6. Delete file
- fs.unlink("newdata.txt", (err) => {
- if (err) {
- console.log("Error deleting file");
- return;
- }
- console.log("\nFile deleted successfully");
- });
- });
- });
-});
-});
-});
-4
-app.js
-const http = require("http");
-const fs = require("fs");
+5b
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+df = pd.read_csv("minihomeprices.csv")
+df['bedrooms'] = df['bedrooms'].fillna(df['bedrooms'].median())
+X = df[['area', 'bedrooms', 'age']]
+y = df['price']
+model = LinearRegression()
+model.fit(X, y)
+print("Predicted price:", model.predict([[2500, 3, 10]]))
+print("Model Score:", model.score(X, y))
 
-http.createServer((req,res)=>{
-  if(req.url==="/"){
-    fs.readFile("index.html",(e,d)=>{
-      res.writeHead(200,{"Content-Type":"text/html"});
-      res.end(d);
-    });
-  }
-}).listen(3000);
-index.html
-<!DOCTYPE html>
-<html>
-<body>
-
-<h3>Food Delivery</h3>
-
-<input type="radio" name="r" onclick="showMenu('pizza')"> Pizza Hut
-<input type="radio" name="r" onclick="showMenu('kfc')"> KFC
-<input type="radio" name="r" onclick="showMenu('dominos')"> Dominos
-<br><br>
-
-<div id="menu"></div>
-
-<input type="text" id="food" placeholder="Enter food item"><br><br>
-
-<button onclick="order()">Place Order</button>
-
-<script>
-function showMenu(type) {
-  var menu = document.getElementById("menu");
-
-  if (type === "pizza") {
-    menu.innerHTML =
-      "Pizza Hut Menu:<br>" +
-      "Margherita - ₹199<br>" +
-      "Veg Supreme - ₹299<br>" +
-      "Cheese Burst - ₹349<br><br>";
-  }
-  else if (type === "kfc") {
-    menu.innerHTML =
-      "KFC Menu:<br>" +
-      "Fried Chicken - ₹249<br>" +
-      "Burger - ₹199<br>" +
-      "French Fries - ₹149<br><br>";
-  }
-  else if (type === "dominos") {
-    menu.innerHTML =
-      "Dominos Menu:<br>" +
-      "Veg Pizza - ₹199<br>" +
-      "Paneer Pizza - ₹299<br>" +
-      "Garlic Bread - ₹149<br><br>";
-  }
-}
-
-function order() {
-  var food = document.getElementById("food").value;
-  if (food != "")
-    alert("Order placed for " + food);
-}
-</script>
-
-</body>
-</html>
-
-5.
-1. Database Commands
- View all databases
-show dbs
- Create a new or switch databases
-use 235c5
- View current database
-db
- Delete current database
-db.dropDatabase()
-ons
- show collections
- Create a collection named 'students'
-db.createCollection('comments') 
-db.students.drop()
 6.
-1. Sample Dataset (Students Collection)
-{
-"student_id": 101,
-"name": "Anita Sharma",
-"department": "Computer Science",
-"year": 3,
-"cgpa": 8.4
-}
-Database: collegeDB
-Collection: students
-2. Create Operation (Insert Data)
-a) Insert One Document
-use collegeDB
-db.students.insertOne({
-student_id: 101,
-name: "Anita Sharma",
-department: "Computer Science",
-year: 3,
-cgpa: 8.4
-})
-b) Insert Multiple Documents
-db.students.insertMany([
-{
-student_id: 102,
-name: "Rahul Verma",
-department: "Information Technology",
-year: 2,
-cgpa: 7.9
-},
-{
-student_id: 103,
-name: "Neha Singh"
-department: "Computer Science",
-year: 4,
-cgpa: 9.1
-}
-]
-Documents are added to the students collection.
-3. Read Operation (Retrieve Data)
-a) Retrieve All Documents
-db.students.find()
-b) Retrieve with Condition
-db.students.find({ department: "Computer Science" })
-c) Retrieve Specific Fields (Projection)
-db.students.find(
-{ year: 3 },
-{ name: 1, cgpa: 1, _id: 0 }
-)
-d) Find One Document
-db.students.findOne({ student_id: 102 })
-4. Update Operation (Modify Data)
-a) Update One Document
-db.students.updateOne(
-{ student_id: 101 },
-{ $set: { cgpa: 8.8 } }
-)
-b) Update Multiple Documents
-db.students.updateMany(
-{ department: "Computer Science" },
-{ $set: { department: "CSE" } }
-)
-c) Increment a Field
-db.students.updateOne(
-{ student_id: 102 },
-{ $inc: { cgpa: 0.2 } }
-)
-db.students.find()
-5. Delete Operation (Remove Data)
-a) Delete One Document
-db.students.deleteOne({ student_id: 103 })
-b) Delete Multiple Documents
-db.students.deleteMany({ year: 2}
-c) Delete All Documents (Careful!)
- db.students.deleteMany({})
- db.students.find()
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import r2_score
+df = pd.read_csv("daily_weather.csv")
+X = df.drop('relative_humidity_9am', axis=1)
+y = df['relative_humidity_9am']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+model = DecisionTreeRegressor()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print("Predicted:", y_pred[:5])
+print("R2 Score:", r2_score(y_test, y_pred)
+
+7.
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score
+data = load_iris()
+X = data.data
+y = data.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+model = KNeighborsClassifier(n_neighbors=3)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+
+8.
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+df = pd.read_csv("weatherAUS.csv")
+df = df.dropna()
+
+df['RainTomorrow'] = df['RainTomorrow'].map({'No': 0, 'Yes': 1})
+
+X = df.select_dtypes(include=['float64', 'int64'])
+y = df['RainTomorrow']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+9.
+
+import pandas as pd
+from sklearn.cluster import KMeans
+
+# Load dataset
+df = pd.read_csv("mallcustomers.csv")
+
+# Features
+X = df[['Income', 'SpendingScore']]
+
+# K-Means
+kmeans = KMeans(n_clusters=3)
+df['Cluster'] = kmeans.fit_predict(X)
+
+# Show first 10 customers with clusters
+print(df[['Income', 'SpendingScore', 'Cluster']].head(100))
+
+10.
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+# Load dataset
+df = pd.read_csv("housing.csv")
+
+# Drop missing values
+df = df.dropna()
+
+# Keep only numeric columns
+df = df.select_dtypes(include=['int64', 'float64'])
+
+# Features and target
+X = df.drop('Price', axis=1)
+y = df['Price']
+
+# Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Build model
+model = Sequential()
+model.add(Dense(10, activation='relu', input_shape=(X_train.shape[1],)))
+model.add(Dense(1))
+
+# Compile
+model.compile(optimizer='adam', loss='mse')
+
+# Train
+model.fit(X_train, y_train, epochs=10, verbose=0)
+
+# Predict
+predictions = model.predict(X_test)
+
+# Convert to 1D (good practice)
+predictions = predictions.flatten()
+
+# Output
+print("Predicted values:", predictions[:5])
+mse = model.evaluate(X_test, y_test, verbose=0)
+print("Mean Squared Error (MSE):", mse)
+
+
+
+
+
